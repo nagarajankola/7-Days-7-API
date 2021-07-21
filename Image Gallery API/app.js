@@ -4,13 +4,12 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
-const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 
 const app = express();
 
 const userRouter = require("./routes/userRouter");
-const testRouter = require("./routes/testRouter");
+const imageRouter = require("./routes/imageRouter");
 
 app.use(helmet());
 
@@ -25,18 +24,7 @@ app.use(xss());
 // Prevent parameter pollution
 // removes parameter pollution.
 // eg: [in the url if we use 2 sortBy sortBy, it will make it work]
-app.use(
-  hpp({
-    whitelist: [
-      "duration",
-      "ratingsAverage",
-      "ratingsQuantity",
-      "maxGroupSize",
-      "difficulty",
-      "price",
-    ],
-  })
-);
+app.use(hpp());
 
 // This snippet limits the server to make many requests
 const limiter = rateLimit({
@@ -44,18 +32,19 @@ const limiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   message: "Too many requests from this IP, please try again in an hour.",
 });
+
 app.use("/api", limiter);
 
 app.use("/api/v1/users", userRouter);
 
-app.use("/api/v1/testRoute", testRouter);
+app.use("/api/v1/image", imageRouter);
 
 app.all("*", (req, res, next) => {
-  // res.status(404).json({
-  //   status:"fail",
-  //   message:`Can't find ${req.originalUrl} on this server`
-  // })
-  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+  res.status(404).json({
+    status: "fail",
+    message: `Can't find ${req.originalUrl} on this server`,
+  });
+  // next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 
 app.use(globalErrorHandler);
