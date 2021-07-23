@@ -1,6 +1,7 @@
 const multer = require("multer");
 const Image = require("../models/imageModel");
 const AppError = require("../utils/appError");
+const factory = require("../controllers/handlerFactory");
 
 // THIS MAKE THE FILE INTO BUFFER
 const multerStorage = multer.memoryStorage();
@@ -22,46 +23,23 @@ const upload = multer({
 
 exports.uploadImages = upload.array("image", 5);
 
-exports.uploadImageDetails = async (req, res) => {
-  try {
-    req.body.image = req.files;
-    req.body.userID = req.user._id;
-    
-    const imageData = new Image(req.body);
+exports.uploadImageDetails = catchAsync(async (req, res) => {
+  req.body.image = req.files;
+  req.body.userID = req.user._id;
 
-    const image = await imageData.save();
+  const imageData = new Image(req.body);
 
-    res.status(201).json({
-      status: "success",
-      message: "Image(s) uploaded successfully",
-      image
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(404).json({
-      status: "fail",
-      error,
-    });
-  }
-};
+  const image = await imageData.save();
 
-exports.deleteImage = async(req, res) => {
-  try {
-    const deleteImage = await Image.findByIdAndDelete(req.params.id);
+  res.status(201).json({
+    status: "success",
+    message: "Image(s) uploaded successfully",
+    image,
+  });
+});
 
-    res.status(204).json({
-      status: "success",
-    })
-
-  } catch (error) {
-    console.log(error);
-    res.status(404).json({
-      status: "fail",
-      error,
-    });
-  }
-};
+exports.deleteImage = factory.deleteOne(Image);
 
 exports.qwerty = (req, res) => {
-  console.log(req)
-}
+  console.log(req);
+};

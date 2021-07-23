@@ -1,23 +1,15 @@
-exports.testRoute = async (req, res, next) => {
-  try {
+const catchAsync = require("../utils/catchAsync");
+
+exports.testRoute = catchAsync(async (req, res, next) => {
     res.status(201).json({
       status: "success",
-      message: "admin/users"
+      message: "admin & users"
     });
-  } catch (err) {
-    console.log(err);
-    res.send(err);
-  }
-};
+});
 
-exports.testRouteSadmin = async (req, res, next) => {
-  try {
+exports.testRouteSadmin = catchAsync(async (req, res, next) => {
     res.status(201).json({
       status: "success",
       message: "super admin"
     });
-  } catch (err) {
-    console.log(err);
-    res.send(err);
-  }
-};
+});

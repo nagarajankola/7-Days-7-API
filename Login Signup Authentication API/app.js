@@ -25,18 +25,7 @@ app.use(xss());
 // Prevent parameter pollution
 // removes parameter pollution.
 // eg: [in the url if we use 2 sortBy sortBy, it will make it work]
-app.use(
-  hpp({
-    whitelist: [
-      "duration",
-      "ratingsAverage",
-      "ratingsQuantity",
-      "maxGroupSize",
-      "difficulty",
-      "price",
-    ],
-  })
-);
+app.use(hpp());
 
 // This snippet limits the server to make many requests
 const limiter = rateLimit({

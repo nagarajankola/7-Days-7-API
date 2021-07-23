@@ -64,22 +64,16 @@ exports.updateMe = async (req, res, next) => {
   }
 };
 
-exports.deleteMe = async (req, res, next) => {
-  try {
+exports.deleteMe = catchAsync(async (req, res, next) => {
     await User.findByIdAndUpdate(req.user.id, { isActive: false });
 
     res.status(204).json({
       status: "success",
       data: null,
     });
-  } catch (err) {
-    console.log(err);
-    res.send("error");
-  }
-};
+});
 
-exports.getOneUser = async (req, res, next) => {
-  try {
+exports.getOneUser = catchAsync(async (req, res, next) => {
     const user = await User.findById(req.params.id);
 
     if (!user) {
@@ -92,17 +86,15 @@ exports.getOneUser = async (req, res, next) => {
         user,
       },
     });
-  } catch (err) {
-    console.log(err);
-    res.status(404).json({
-      status: "fail",
-      err,
-    });
-  }
-};
+});
 
 exports.getMe = async (req, res, next) => {
   req.params.id = req.user.id;
 
   next();
 };
+
+exports.updateUser = factory.updateOne(User);
+
+exports.deleteUser = factory.deleteOne(User);
+

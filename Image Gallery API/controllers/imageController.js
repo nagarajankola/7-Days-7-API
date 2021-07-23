@@ -5,6 +5,7 @@ const fs = require("fs");
 const Image = require("../models/imageModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
+const factory = require("../controllers/handlerFactory");
 
 // THIS MAKE THE FILE INTO BUFFER
 const multerStorage = multer.diskStorage({
@@ -51,8 +52,7 @@ const upload = multer({
 
 exports.uploadImages = upload.array("image", 5);
 
-exports.uploadImageDetails = async (req, res, next) => {
-  try {
+exports.uploadImageDetails = catchAsync(async (req, res, next) => {
     req.body.userID = req.user._id;
     req.body.image = req.files;
     const imageData = new Image(req.body);
@@ -63,16 +63,9 @@ exports.uploadImageDetails = async (req, res, next) => {
       status: "success",
       image
     });
-  } catch (error) {
-    console.log(error);
-    res.json({
-      error
-    });
-  }
-};
+});
 
-exports.deleteImage = (req, res) => {
-  try {
+exports.deleteImage = catchAsync((req, res) => {
     let resultHandler = function (err) {
       if (err) {
         console.log("unlink failed", err);
@@ -87,19 +80,6 @@ exports.deleteImage = (req, res) => {
       status: 'success'
     })
 
-  } catch (error) {
-    console.log(error);
-    res.status(404).json({
-      status: "fail"
-    })
-  }
+})
 
-}
-
-exports.getAllImages = async (req, res) => {
-  const images = await Image.find()
-  res.json({
-    status: "success",
-    result: images.length,
-    images: images})
-}
+exports.getAllImages = factory.getAll(Image);

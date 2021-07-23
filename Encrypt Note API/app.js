@@ -25,18 +25,7 @@ app.use(xss());
 // Prevent parameter pollution
 // removes parameter pollution.
 // eg: [in the url if we use 2 sortBy sortBy, it will make it work]
-app.use(
-  hpp({
-    whitelist: [
-      "duration",
-      "ratingsAverage",
-      "ratingsQuantity",
-      "maxGroupSize",
-      "difficulty",
-      "price",
-    ],
-  })
-);
+app.use(hpp());
 
 // This snippet limits the server to make many requests
 const limiter = rateLimit({
@@ -52,9 +41,9 @@ app.use("/api/v1/note", noteRouter);
 
 app.all("*", (req, res, next) => {
   res.status(404).json({
-    status:"fail",
-    message:`Can't find ${req.originalUrl} on this server`
-  })
+    status: "fail",
+    message: `Can't find ${req.originalUrl} on this server`,
+  });
   // next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 
