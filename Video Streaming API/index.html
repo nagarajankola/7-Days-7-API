@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTTP Video Stream</title>    
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  </head>
+  <body style="background-color:rgb(46, 54, 71);">
+    <section class="text-gray-600 body-font">
+      <div class="container px-5 py-7 mx-auto flex flex-wrap">
+        <div class="flex flex-wrap md:-m-2 -m-1">
+          <div class="flex flex-wrap w-full">
+            <div class="md:p-2 p-1 w-full">
+              <!-- HTML5 Video Tag -->
+              <video id="videoPlayer"height="90%" width="100%" controls muted autoplay>
+                <source src="/video" type="video/mp4" />
+              </video>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
